@@ -12,6 +12,18 @@
 </head>
 <body>
   <div id="app"></div>
+  <script>
+    // One-time cleanup for the legacy demo workspace. This intentionally
+    // removes only the old CareerOS v1 browser state so the app boots from
+    // the current clean seed. The marker prevents repeated resets later.
+    (() => {
+      const migrationKey = 'careeros-clean-migration-2026-08-31';
+      if (!localStorage.getItem(migrationKey)) {
+        localStorage.removeItem('careeros-state-v1');
+        localStorage.setItem(migrationKey, 'done');
+      }
+    })();
+  </script>
   <script type="module" src="./src/app.js"></script>
 </body>
 </html>
