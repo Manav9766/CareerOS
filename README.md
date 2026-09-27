@@ -24,7 +24,8 @@ The current repository contains a runnable browser-based CareerOS v1 with:
 - Quick-add flows
 - Dark/light themes
 - Responsive layout
-- Browser persistence via `localStorage`
+- Supabase email/password authentication
+- Cloud-backed workspace persistence through Supabase, with `localStorage` as the in-browser working cache
 - Fictional demo data
 - PostgreSQL migration schema
 
@@ -39,8 +40,10 @@ CareerOS/
 │   └── schema.sql
 └── src/
     ├── app.js
+    ├── bootstrap.js
     ├── data.js
-    └── styles.css
+    ├── styles.css
+    └── supabase.js
 ```
 
 ## Run locally
@@ -65,17 +68,15 @@ python -m http.server 8080
 
 ## Persistence
 
-CareerOS currently stores workspace state in the browser under the `careeros-state-v1` localStorage key. This makes the prototype zero-setup and immediately usable.
+CareerOS authenticates users with Supabase and stores each signed-in user's workspace in the `workspace_state` table. The browser still uses the `careeros-state-v1` localStorage key as its working cache, and changes are mirrored back to Supabase for cross-device persistence.
 
-For the hosted production version, the intended next migration is:
+For a fuller production version, likely next steps include:
 
 1. Next.js / TypeScript application shell
-2. PostgreSQL database
-3. Authentication
-4. Server-side validated CRUD
-5. Cross-device persistence
-6. Deployment on Vercel
-7. Managed PostgreSQL via Supabase or Neon
+2. Server-side validated CRUD
+3. Stronger error handling and sync conflict handling
+4. Deployment on Vercel
+5. Expanded relational data modeling beyond the current workspace-state document
 
 ## Demo data
 
@@ -94,4 +95,4 @@ Applications feed funnel analytics, contacts feed relationship metrics, project 
 
 ## Production roadmap
 
-The next major version will replace browser-only storage with PostgreSQL and authentication while keeping the same domain model and workflows. Later extensions can include job-description parsing, resume matching, calendar integrations, email workflows and LLM-assisted interview/job-search analysis.
+The next major version can build on the existing Supabase authentication and cloud persistence by moving more application logic and validation server-side while keeping the same domain model and workflows. Later extensions can include job-description parsing, resume matching, calendar integrations, email workflows and LLM-assisted interview/job-search analysis.
