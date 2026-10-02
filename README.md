@@ -70,6 +70,10 @@ python -m http.server 8080
 
 CareerOS authenticates users with Supabase and stores each signed-in user's workspace in the `workspace_state` table. The browser still uses the `careeros-state-v1` localStorage key as its working cache, and changes are mirrored back to Supabase for cross-device persistence.
 
+### Supabase client security
+
+The publishable Supabase key used by the browser client is intentionally public-facing and should be treated as non-secret. Access control must be enforced with Supabase Row Level Security (RLS) policies. Never place a `service_role` key or other privileged credential in browser code or commit it to the repository.
+
 For a fuller production version, likely next steps include:
 
 1. Next.js / TypeScript application shell
