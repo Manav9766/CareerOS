@@ -259,3 +259,29 @@ create table if not exists roadmap_milestones (
   completed boolean default false,
   completed_at timestamptz
 );
+-- Browser workspace persistence used by src/bootstrap.js.
+-- user_id references Supabase Auth directly because session.user.id comes from auth.users.
+create table if not exists workspace_state (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  state jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table workspace_state enable row level security;
+
+drop policy if exists "Users can read own workspace" on workspace_state;
+create policy "Users can read own workspace"
+  on workspace_state for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert own workspace" on workspace_state;
+create policy "Users can insert own workspace"
+  on workspace_state for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update own workspace" on workspace_state;
+create policy "Users can update own workspace"
+  on workspace_state for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
