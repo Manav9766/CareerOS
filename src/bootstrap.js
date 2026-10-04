@@ -57,7 +57,11 @@ async function loadRemoteState(){
   state.meta.demo = false;
   originalSetItem.call(localStorage, KEY, JSON.stringify(state));
   if(!data){
-    await supabase.from('workspace_state').upsert({ user_id: session.user.id, state, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    const { error: createError } = await supabase.from('workspace_state').upsert(
+      { user_id: session.user.id, state, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id' }
+    );
+    if(createError) throw createError;
   }
 }
 
