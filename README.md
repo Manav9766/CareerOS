@@ -66,6 +66,10 @@ You can also use any static web server, for example:
 python -m http.server 8080
 ```
 
+### Supabase database setup
+
+Before signing in for the first time, apply `db/schema.sql` to the Supabase project used by `src/supabase.js` (for example, through the Supabase SQL Editor). The schema creates the `workspace_state` table used by the browser client and enables Row Level Security policies so authenticated users can access only their own workspace row.
+
 ## Persistence
 
 CareerOS authenticates users with Supabase and stores each signed-in user's workspace in the `workspace_state` table. The browser still uses the `careeros-state-v1` localStorage key as its working cache, and changes are mirrored back to Supabase for cross-device persistence.
