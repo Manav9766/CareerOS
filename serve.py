@@ -1,8 +1,9 @@
+from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
-import os
 
 root = Path(__file__).resolve().parent
-os.chdir(root)
+handler = partial(SimpleHTTPRequestHandler, directory=root)
+
 print('CareerOS → http://localhost:8765')
-ThreadingHTTPServer(('127.0.0.1', 8765), SimpleHTTPRequestHandler).serve_forever()
+ThreadingHTTPServer(('127.0.0.1', 8765), handler).serve_forever()
