@@ -5,6 +5,7 @@ const KEY = 'careeros-state-v1';
 const app = document.getElementById('app');
 let session = null;
 let syncing = false;
+let cloudMirrorInstalled = false;
 let originalSetItem = Storage.prototype.setItem;
 
 function clone(x){ return JSON.parse(JSON.stringify(x)); }
@@ -66,6 +67,9 @@ async function loadRemoteState(){
 }
 
 function installCloudMirror(){
+  if(cloudMirrorInstalled) return;
+  cloudMirrorInstalled = true;
+
   Storage.prototype.setItem = function(key, value){
     originalSetItem.call(this, key, value);
     if(this === localStorage && key === KEY && session && !syncing){
