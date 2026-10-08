@@ -80,6 +80,7 @@ function installCloudMirror(){
       syncing = true;
       supabase.from('workspace_state').upsert({ user_id: session.user.id, state: parsed, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
         .then(({error}) => { if(error) console.error('CareerOS cloud sync failed:', error); })
+        .catch(error => { console.error('CareerOS cloud sync failed:', error); })
         .finally(() => { syncing = false; });
     }
   };
