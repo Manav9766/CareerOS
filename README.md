@@ -64,6 +64,8 @@ Then open:
 http://localhost:8765
 ```
 
+Serve CareerOS over HTTP rather than opening `index.html` directly from the filesystem. The app boots through the ES module in `src/bootstrap.js`, and using a local web server avoids browser restrictions around module loading and authentication flows on `file://` pages.
+
 You can also use any static web server, for example:
 
 ```bash
