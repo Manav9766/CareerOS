@@ -80,6 +80,12 @@ Before signing in for the first time, apply `db/schema.sql` to the Supabase proj
 
 CareerOS authenticates users with Supabase and stores each signed-in user's workspace in the `workspace_state` table. The browser still uses the `careeros-state-v1` localStorage key as its working cache, and changes are mirrored back to Supabase for cross-device persistence.
 
+### Sync limitations and troubleshooting
+
+Workspace edits are saved to browser `localStorage` immediately, then sent to Supabase asynchronously. The current implementation does not queue or retry failed writes, and it logs sync failures to the browser developer console rather than showing an in-app warning. Avoid closing the tab immediately after important edits, and verify changes on another device before relying on them as backed up. If sync appears broken, check the browser console and confirm that the Supabase project is reachable and `db/schema.sql` has been applied.
+
+The app loads the remote workspace when signing in, which replaces the browser's cached workspace. Simultaneous edits from multiple devices are not merged; the latest successful whole-workspace write can overwrite another device's changes. For now, edit from one device at a time when possible.
+
 ### Supabase client security
 
 The publishable Supabase key used by the browser client is intentionally public-facing and should be treated as non-secret. Access control must be enforced with Supabase Row Level Security (RLS) policies. Never place a `service_role` key or other privileged credential in browser code or commit it to the repository.
