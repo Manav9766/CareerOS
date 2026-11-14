@@ -69,8 +69,10 @@ Serve CareerOS over HTTP rather than opening `index.html` directly from the file
 You can also use any static web server, for example:
 
 ```bash
-python -m http.server 8080
+python -m http.server 8080 --bind 127.0.0.1
 ```
+
+Bind the alternative server to `127.0.0.1` to keep it accessible only from your computer. Without `--bind`, Python's HTTP server may listen on all network interfaces and expose the project files to other devices on the network. Neither option is intended for production hosting.
 
 ### Supabase database setup
 
