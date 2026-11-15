@@ -41,9 +41,13 @@ function bindAuth(){
     msg.textContent = error ? error.message : 'Signed in.';
   });
   document.getElementById('createAccount')?.addEventListener('click', async () => {
-    const email = document.getElementById('authEmail').value.trim();
+    const emailInput = document.getElementById('authEmail');
+    const email = emailInput.value.trim();
     const password = document.getElementById('authPassword').value;
-    if(!email || password.length < 6){ msg.textContent = 'Enter an email and a password of at least 6 characters.'; return; }
+    if(!email || !emailInput.validity.valid || password.length < 6){
+      msg.textContent = 'Enter a valid email and a password of at least 6 characters.';
+      return;
+    }
     msg.textContent = 'Creating account…';
     const { error } = await supabase.auth.signUp({ email, password });
     msg.textContent = error ? error.message : 'Account created. Check your email if Supabase asks you to confirm it.';
