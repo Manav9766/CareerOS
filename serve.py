@@ -7,7 +7,12 @@ def main() -> None:
     root = Path(__file__).resolve().parent
     handler = partial(SimpleHTTPRequestHandler, directory=root)
 
-    server = ThreadingHTTPServer(("127.0.0.1", 8765), handler)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", 8765), handler)
+    except OSError as error:
+        raise SystemExit(
+            f"Cannot start CareerOS on http://localhost:8765: {error}"
+        ) from error
     print("CareerOS → http://localhost:8765")
     try:
         server.serve_forever()
