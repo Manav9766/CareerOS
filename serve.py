@@ -1,10 +1,19 @@
 from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 
 class AppHandler(SimpleHTTPRequestHandler):
     """Serve app assets without exposing directory indexes."""
+
+    def send_head(self):
+        # SimpleHTTPRequestHandler otherwise serves known paths under .git/.
+        request_path = unquote(urlsplit(self.path).path)
+        if any(part.startswith(".") for part in request_path.split("/") if part):
+            self.send_error(404, "File not found")
+            return None
+        return super().send_head()
 
     def list_directory(self, path):
         self.send_error(404, "Directory listing is disabled")
