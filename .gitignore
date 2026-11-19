@@ -1,0 +1,14 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Python cache generated when running the local server
+__pycache__/
+*.py[cod]
+
+# Editor and operating-system artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
