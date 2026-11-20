@@ -66,13 +66,7 @@ http://localhost:8765
 
 Serve CareerOS over HTTP rather than opening `index.html` directly from the filesystem. The app boots through the ES module in `src/bootstrap.js`, and using a local web server avoids browser restrictions around module loading and authentication flows on `file://` pages.
 
-You can also use any static web server, for example:
-
-```bash
-python -m http.server 8080 --bind 127.0.0.1
-```
-
-Bind the alternative server to `127.0.0.1` to keep it accessible only from your computer. Without `--bind`, Python's HTTP server may listen on all network interfaces and expose the project files to other devices on the network. Neither option is intended for production hosting.
+Use `python serve.py` for local development: its handler disables directory listings and blocks direct requests for hidden paths such as `.git/`. A generic static server (including `python -m http.server`) does **not** provide these protections and may serve repository metadata or local files if their paths are known. If you choose another server, configure equivalent file-access restrictions and bind it to `127.0.0.1` so other devices cannot connect. The development server is not intended for production hosting.
 
 ### Supabase database setup
 
