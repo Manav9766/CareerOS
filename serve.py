@@ -9,7 +9,14 @@ class AppHandler(SimpleHTTPRequestHandler):
 
     def send_head(self):
         # SimpleHTTPRequestHandler otherwise serves known paths under .git/.
-        request_path = unquote(urlsplit(self.path).path)
+        request_path = urlsplit(self.path).path
+        # Decode nested escapes too: the parent handler decodes paths again.
+        # For example, %252egit becomes %2egit and then .git.
+        while True:
+            decoded_path = unquote(request_path)
+            if decoded_path == request_path:
+                break
+            request_path = decoded_path
         if any(part.startswith(".") for part in request_path.split("/") if part):
             self.send_error(404, "File not found")
             return None
