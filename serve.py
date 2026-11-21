@@ -17,7 +17,10 @@ class AppHandler(SimpleHTTPRequestHandler):
             if decoded_path == request_path:
                 break
             request_path = decoded_path
-        if any(part.startswith(".") for part in request_path.split("/") if part):
+        # On Windows, backslashes are path separators too; reject hidden paths
+        # written with either separator before the parent handler resolves them.
+        normalized_path = request_path.replace("\\", "/")
+        if any(part.startswith(".") for part in normalized_path.split("/") if part):
             self.send_error(404, "File not found")
             return None
         return super().send_head()
