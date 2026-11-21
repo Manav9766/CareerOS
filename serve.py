@@ -23,6 +23,13 @@ class AppHandler(SimpleHTTPRequestHandler):
         if any(part.startswith(".") for part in normalized_path.split("/") if part):
             self.send_error(404, "File not found")
             return None
+        # The standard handler follows symlinks, including links outside the app.
+        # Resolve the requested file before allowing it to be served.
+        root = Path(self.directory).resolve()
+        target = Path(self.translate_path(self.path)).resolve()
+        if not target.is_relative_to(root):
+            self.send_error(404, "File not found")
+            return None
         return super().send_head()
 
     def list_directory(self, path):
