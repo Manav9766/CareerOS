@@ -30,7 +30,12 @@ class AppHandler(SimpleHTTPRequestHandler):
         # The standard handler follows symlinks, including links outside the app.
         # Resolve the requested file before allowing it to be served.
         root = Path(self.directory).resolve()
-        target = Path(self.translate_path(self.path)).resolve()
+        try:
+            target = Path(self.translate_path(self.path)).resolve()
+        except (OSError, RuntimeError, ValueError):
+            # Invalid paths and symlink loops cannot be served safely.
+            self.send_error(404, "File not found")
+            return None
         if not target.is_relative_to(root):
             self.send_error(404, "File not found")
             return None
