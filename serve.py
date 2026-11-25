@@ -9,7 +9,11 @@ class AppHandler(SimpleHTTPRequestHandler):
 
     def send_head(self):
         # SimpleHTTPRequestHandler otherwise serves known paths under .git/.
-        request_path = urlsplit(self.path).path
+        try:
+            request_path = urlsplit(self.path).path
+        except ValueError:
+            self.send_error(400, "Invalid request path")
+            return None
         # Decode nested escapes too: the parent handler decodes paths again.
         # For example, %252egit becomes %2egit and then .git.
         while True:
