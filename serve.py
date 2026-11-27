@@ -39,6 +39,10 @@ class AppHandler(SimpleHTTPRequestHandler):
         if not target.is_relative_to(root):
             self.send_error(404, "File not found")
             return None
+        # A visible symlink must not bypass the hidden-file restriction.
+        if any(part.startswith(".") for part in target.relative_to(root).parts):
+            self.send_error(404, "File not found")
+            return None
         return super().send_head()
 
     def list_directory(self, path):
