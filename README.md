@@ -50,7 +50,7 @@ CareerOS/
 
 No package installation is required, but local use requires:
 
-- Python 3 to run `serve.py` (or another static web server)
+- Python 3.9 or later to run `serve.py` (the file-access guard uses `Path.is_relative_to`, introduced in Python 3.9), or another static web server
 - Internet access so the browser can load the Supabase JavaScript client from jsDelivr
 - Network access to the Supabase project configured in `src/supabase.js` for authentication and workspace sync
 
